@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GPUHunt</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,700&display=swap">
+  <style>
+    * {
+      padding: 0;
+      margin: 0;
+      box-sizing: border-box;
+      font-family: 'Roboto', sans-serif;
+      text-decoration: none;
+    }
+    body {
+      font-family: Arial, sans-serif;
+    }
+
+    .container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 20px;
+    }
+
+    .card {
+        background: #f5f5f5;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        margin: 20px;
+        width: 250px;
+        text-align: center;
+        cursor: pointer;
+        transition: transform 0.2s;
+    }
+
+    .card:hover {
+        transform: scale(1.05);
+    }
+
+    .card img {
+        border-top-left-radius: 8px;
+        border-top-right-radius: 8px;
+        width: 100%;
+    }
+
+    .card h3 {
+        margin: 15px 0;
+    }
+
+    .card p {
+        color: #888;
+        font-size: 18px;
+        margin: 0 0 15px;
+    }
+
+    .popup {
+        display: none;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 80%;
+        max-width: 600px;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        z-index: 1000;
+    }
+
+    .popup h2 {
+        margin-top: 0;
+    }
+
+    .popup p {
+        margin: 15px 0;
+    }
+
+    .popup .close {
+        background: #ff5f5f;
+        border: none;
+        border-radius: 50%;
+        color: white;
+        cursor: pointer;
+        font-size: 18px;
+        height: 30px;
+        line-height: 30px;
+        position: absolute;
+        right: 15px;
+        top: 15px;
+        width: 30px;
+        text-align: center;
+    }
+
+    .overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 999;
+    }
+
+    nav {
+      width: 100%;
+      height: 48px;
+      background: #000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+    }
+
+    nav ul li {
+      margin: 0 40px;
+    }
+
+    nav ul li a {
+      font-weight: 300;
+      color: #adadad;
+      transition: 600ms;
+    }
+
+    nav ul li a:hover {
+      color: #f5f5f7;
+    }
+
+    /*--- section welcome ---*/
+    .welcome {
+      width: 100%;
+      height: 500px;
+      background-image: url("https://github.com/carusina/Final-SoftWare-Project/blob/GPUHunt_page/%E1%84%83%E1%85%A1%E1%86%AF.png?raw=true");
+      background-repeat: no-repeat;
+      background-size: cover;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .welcome h1 {
+      color: #fff;
+      font-weight: 300;
+      font-size: 2rem;
+    }
+
+    /*--- section product ---*/
+    .product-mac {
+      width: 100%;
+      height: auto;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 50px 0;
+      cursor: pointer;
+    }
+
+    .product-mac h2 {
+      font-size: 2rem;
+      font-weight: 300;
+      margin-bottom: 20px;
+    }
+
+    .container {
+      width: 1070px;
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-gap: 15px;
+    }
+
+    .grid-product {
+      background: #f1f1f1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      transition: .5s;
+      border-radius: 15px;
+    }
+
+    .grid-product:hover {
+      background: #e1e1e1;
+    }
+
+    .grid-product img {
+      width: 300px;
+    }
+
+    .grid-detail {
+      margin: 20px 0;
+      text-align: center;
+    }
+
+    .grid-detail p:last-child {
+      transition: .5s;
+      margin-top: 10px;
+    }
+
+    .grid-product:hover > .grid-detail p:last-child {
+      color: #3498db;
+    }
+
+    /*--- footer ---*/
+    footer {
+      width: 100%;
+      height: 500px;
+      background: #f1f1f1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .footer-main {
+      width: 1070px;
+    }
+
+    .footer-detail {
+      font-size: .7rem;
+      color: #95a5a6;
+      padding: 20px 0;
+      border-bottom: 1px solid #bdc3c7;
+    }
+
+    .footer-detail a {
+      color: #2c3e50;
+    }
+
+    .footer-detail a:hover {
+      text-decoration: underline;
+    }
+
+    .footer-welcome {
+      display: flex;
+      margin: 20px 0;
+      font-size: .8rem;
+      color: #34495e;
+    }
+
+    .footer-welcome i {
+      margin-right: 10px;
+    }
+
+    .footer-ul {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .footer-ul ul {
+      list-style: none;
+    }
+
+    .footer-ul ul li {
+      margin: 7px 0;
+    }
+
+    .footer-ul ul li h4 {
+      color: #34495e;
+      font-size: .7rem;
+    }
+
+    .footer-ul ul li a {
+      color: #7f8c8d;
+      font-size: .7rem;
+    }
+
+    .footer-ul ul li a:hover {
+      text-decoration: underline; 
+    }
+
+    #mt {
+      padding-top: 30px;
+    }
+
+    .footer-contact {
+      border-bottom: 1px solid #bdc3c7;
+      padding: 12px 0;
+      margin: 10px 0;
+      color: #7f8c8d;
+      font-size: .7rem;
+    }
+
+    .footer-contact a {
+      color: #3498db;
+    }
+
+    .footer-contact a:hover {
+      text-decoration: underline;
+    }
+
+    .footer-copyright {
+      color: #7f8c8d;
+      font-size: .7rem;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .footer-copyright ul {
+      display: flex;
+      list-style: none;
+      width: auto;
+    }
+
+    .footer-copyright ul li {
+      margin: 0 10px;
+    }
+
+    .footer-copyright ul li a {
+      color: #7f8c8d;
+    }
+
+    .footer-copyright ul li a:hover {
+      text-decoration: underline; 
+    }
+
+    .vr {
+      height: 15px;
+      width: 1px;
+      background: #bdc3c7;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <ul>
+      <li><a href="#">GPUHunt</a></li>
+      <li><a href="#">Products</a></li>  
+      <li><a href="#">About</a></li>
+      <li><a href="#">Contact</a></li>  
+      <li><a href="#"><i class="fas fa-search"></i></a></li> <!-- 챗봇 여기 들어가면 될듯--> 
+      <li><a href="#"><i class="fas fa-shopping-bag"></i></a></li>  
+    </ul>
+  </nav>
+  
+  <section class="welcome">
+    <h1>Shop for your favorite GPU products.</h1>
+  </section>
+  
+  <section class="product-mac">
+    <div class="container"><br><br>
+      <h2>GPU</h2>
+      <div class="grid">
+        <div class="grid-product" onclick="openPopup('popup1')">
+          <img src="https://assets.nvidia.partners/images/png/GeForce-ADA-RTX4060Ti-Back.png">
+          <div class="grid-detail">
+            <p>RTX 4060Ti</p>
+            <p>From ₩639,000</p>
+          </div>
+        </div>
+        
+        <div class="grid-product" onclick="openPopup('popup2')">
+          <img src="https://assets.nvidia.partners/images/png/GeForce-ADA-RTX4070-Back.png">
+          <div class="grid-detail">
+            <p>RTX 4070</p>
+            <p>From ₩859,000</p>
+          </div>
+        </div>
+        
+        <div class="grid-product" onclick="openPopup('popup3')">
+          <img src="https://assets.nvidia.partners/images/png/RTX-4070-SUPER-Back.png">
+          <div class="grid-detail">
+            <p>RTX 4070 SUPER</p>
+            <p>From ₩919,000</p>
+          </div>
+        </div>
+
+        <div class="grid-product" onclick="openPopup('popup4')">
+          <img src="https://assets.nvidia.partners/images/png/3090_Ti_GPU-removebg-preview.png">
+          <div class="grid-detail">
+            <p>RTX 3090 Ti</p>
+            <p>From ₩1,738,040</p>
+          </div>
+        </div>
+        
+        <div class="grid-product" onclick="openPopup('popup5')">
+          <br><br><img src="https://assets.nvidia.partners/images/png/4080_FE-removebg-preview.png">
+          <div class="grid-detail">
+            <br><br><p>RTX 4080</p>
+            <p>From ₩1,920,000</p>
+          </div>
+        </div>
+        
+        <div class="grid-product" onclick="openPopup('popup6')">
+          <img src="https://assets.nvidia.partners/images/png/GeForce-RTX4090-Back.png">
+          <div class="grid-detail">
+            <p>RTX 4090</p>
+            <p>From ₩2,630,000</p>
+          </div>
+        </div>
+    </div> <!--end container-->
+  </section><br><br><br><br><br>
+
+<footer>
+  <div class="footer-main">
+    <div class="footer-detail">
+      <p>모든 가격에는 부가가치세가 포함되어 있습니다. 모든 주문은 무료 배송되며, 평균 배송 기간은 3일 이내입니다.</p>
+      <p>*총 주문 금액이 ₩50,000,000 미만이어야 합니다. 은행 또는 결제 처리 기관에 의해 추가 수수료가 부과될 수 있습니다.</p>
+      <p>**일부 고객에 한해 승인 절차가 필요할 수 있습니다. 자세한 내용은 고객 지원 페이지를 참조하십시오. <a href="#">http://www.GPUHunt.com/help/payments</a></p>
+    </div> <!-- end footer detail -->
+    
+    <div class="footer-welcome">
+      <i class="fab fa-apple"></i>
+      <i class="fas fa-chevron-right"></i>
+      <p>Welcome to the GPUHunt</p>
+    </div> <!-- end footer-welcome -->
+    
+    <div class="footer-ul">
+      <ul>
+        <li><h4>Shop and Learn</h4></li>
+        <li><a href="#">NVIDIA GeForce RTX 4060 Ti</a></li>
+        <li><a href="#">NVIDIA GeForce RTX 4070</a></li>
+        <li><a href="#">NVIDIA GeForce RTX 4070 SUPER</a></li>
+        <li><a href="#">NVIDIA GeForce RTX 3090 Ti</a></li>
+        <li><a href="#">NVIDIA GeForce RTX 4080</a></li>
+        <li><a href="#">NVIDIA GeForce RTX 4090 Ti</a></li>
+      </ul>
+      
+      <ul>
+        <li><h4>GPUHunt Store</h4></li>
+        <li><a href="#">GPUHunt Store App</a></li>
+        <li><a href="#">Financing</a></li>
+        <li><a href="#">Order Status</a></li>
+        <li><a href="#">Shopping Help</a></li>
+      </ul>
+      
+      <ul>
+        <li><h4>For Education</h4></li>
+        <li><a href="#">GPUHunt and Education</a></li>
+        <li><a href="#">Shop for College</a></li>
+        <li id="mt"><h4>For Business</h4></li>
+        <li><a href="#">GPUHunt and Business</a></li>
+        <li><a href="#">shop for Business</a></li>
+      </ul>
+      
+      <ul>
+        <li><h4>Account</h4></li>
+        <li><a href="#">Manage Your GPUHunt ID</a></li>
+        <li><a href="#">GPUHunt Store Account</a></li>
+        <li><a href="#">iCloud.com</a></li>
+        <li id="mt"><h4>GPUHunt Values</h4></li>
+        <li><a href="#">Accessibility</a></li>
+        <li><a href="#">Environment</a></li>
+        <li><a href="#">Privacy</a></li>
+        <li><a href="#">Supplier Responsibility</a></li>
+      </ul>
+      
+      <ul>
+        <li><h4>About GPUHunt</h4></li>
+        <li><a href="#">Newsroom</a></li>
+        <li><a href="#">Investors</a></li>
+        <li><a href="#">Events</a></li>
+        <li><a href="#">Contact Apple</a></li>
+      </ul>
+
+      <ul>
+        <li><h4>About Provider</h4></li>
+        <li><a href="#">김민서(msjjang0315@naver.com)</a></li>
+        <li><a href="#">김성환(seonghwan66@naver.com)</a></li>
+        <li><a href="#">김형진(gudwls0727@naver.com)</a></li>
+        <li><a href="#">송호영(thdghdud317@naver.com)</a></li>
+        <li><a href="#">정지석(jjc820@naver.com)</a></li>
+        <li><a href="#">조준혁(whwnsgur0929@naver.com)</a></li>
+      </ul>
+    </div>
+    
+    <div class="footer-contact">
+      <p>More ways to shop: visit an <a href="#">GPUHunt Store, </a>Call 02-1234-5678, or <a href="#">find a seller</a></p>
+    </div>
+    <div class="footer-copyright">
+      <p>Copyright © 2024 GPUHunt Inc. All rights reserved.</p>
+      
+      <ul>
+        <li><a href="#">Privacy Policy</a></li>
+        <div class="vr"></div>
+        <li><a href="#">Terms of Use</a></li>
+        <div class="vr"></div>
+        <li><a href="#">Sales and Refunds</a></li>
+        <div class="vr"></div>
+        <li><a href="#">Legal</a></li>
+        <div class="vr"></div>
+        <li><a href="#">Sitemap</a></li>
+      </ul>
+    </div>
+    
+  </div>
+</footer>
+
+<div id="popup1" class="popup">
+  <button class="close" onclick="closePopup('popup1')">&times;</button>
+  <h2>RTX 4060Ti 제품 상세 정보</h2>
+  <p>이 GPU는 최신 아키텍처를 사용하여 뛰어난 성능을 제공합니다.</p>
+  <ul>
+      <li>CUDA Cores: 4864</li>
+      <li>Boost Clock: 1.67 GHz</li>
+      <li>Memory Size: 8GB GDDR6</li>
+      <li>Memory Interface: 128-bit</li>
+  </ul>
+</div>
+
+<div id="popup2" class="popup">
+  <button class="close" onclick="closePopup('popup2')">&times;</button>
+  <h2>RTX 4070 제품 상세 정보</h2>
+  <p>이 GPU는 최신 아키텍처를 사용하여 뛰어난 성능을 제공합니다.</p>
+  <ul>
+      <li>CUDA Cores: 4864</li>
+      <li>Boost Clock: 1.67 GHz</li>
+      <li>Memory Size: 8GB GDDR6</li>
+      <li>Memory Interface: 128-bit</li>
+  </ul>
+</div>
+
+<div id="popup3" class="popup">
+  <button class="close" onclick="closePopup('popup3')">&times;</button>
+  <h2>RTX 4070 SUPER 제품 상세 정보</h2>
+  <p>이 GPU는 최신 아키텍처를 사용하여 뛰어난 성능을 제공합니다.</p>
+  <ul>
+      <li>CUDA Cores: 4864</li>
+      <li>Boost Clock: 1.67 GHz</li>
+      <li>Memory Size: 8GB GDDR6</li>
+      <li>Memory Interface: 128-bit</li>
+  </ul>
+</div>
+
+<div id="popup4" class="popup">
+  <button class="close" onclick="closePopup('popup4')">&times;</button>
+  <h2>RTX 3090Ti 제품 상세 정보</h2>
+  <p>이 GPU는 최신 아키텍처를 사용하여 뛰어난 성능을 제공합니다.</p>
+  <ul>
+      <li>CUDA Cores: 4864</li>
+      <li>Boost Clock: 1.67 GHz</li>
+      <li>Memory Size: 8GB GDDR6</li>
+      <li>Memory Interface: 128-bit</li>
+  </ul>
+</div>
+
+<div id="popup5" class="popup">
+  <button class="close" onclick="closePopup('popup5')">&times;</button>
+  <h2>RTX 4080 제품 상세 정보</h2>
+  <p>이 GPU는 최신 아키텍처를 사용하여 뛰어난 성능을 제공합니다.</p>
+  <ul>
+      <li>CUDA Cores: 4864</li>
+      <li>Boost Clock: 1.67 GHz</li>
+      <li>Memory Size: 8GB GDDR6</li>
+      <li>Memory Interface: 128-bit</li>
+  </ul>
+</div>
+
+<div id="popup6" class="popup">
+  <button class="close" onclick="closePopup('popup6')">&times;</button>
+  <h2>RTX 4090 제품 상세 정보</h2>
+  <p>이 GPU는 최신 아키텍처를 사용하여 뛰어난 성능을 제공합니다.</p>
+  <ul>
+      <li>CUDA Cores: 4864</li>
+      <li>Boost Clock: 1.67 GHz</li>
+      <li>Memory Size: 8GB GDDR6</li>
+      <li>Memory Interface: 128-bit</li>
+  </ul>
+</div>
+
+<div id="overlay" class="overlay" onclick="closePopup('popup1')"></div>
+<div id="overlay" class="overlay" onclick="closePopup('popup2')"></div>
+<div id="overlay" class="overlay" onclick="closePopup('popup3')"></div>
+<div id="overlay" class="overlay" onclick="closePopup('popup4')"></div>
+<div id="overlay" class="overlay" onclick="closePopup('popup5')"></div>
+<div id="overlay" class="overlay" onclick="closePopup('popup6')"></div>
+
+<script>
+  function openPopup(popupId) {
+      document.getElementById(popupId).style.display = 'block';
+      document.getElementById('overlay').style.display = 'block';
+  }
+
+  function closePopup(popupId) {
+      document.getElementById(popupId).style.display = 'none';
+      document.getElementById('overlay').style.display = 'none';
+  }
+</script>
+</body>
+</html>
